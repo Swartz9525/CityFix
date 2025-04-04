@@ -12,6 +12,7 @@ import TrackStatus from "./components/TrackStatus";
 import AboutUs from "./components/AboutUs";
 import ProfilePage from "./components/ProfilePage";
 import { AuthProvider, AuthContext } from "./context/AuthContext";
+import AdminPanel from "./admin/Admin";
 
 // Layout wrapper to show Navbar/Footer only when logged in
 const Layout = ({ children }) => {
@@ -39,6 +40,7 @@ const App = () => {
             <Route path="/trackstatus" element={<TrackStatus />} />
             <Route path="/about" element={<AboutUs />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/admin" element={<AdminPanel />} />
             <Route
               path="*"
               element={

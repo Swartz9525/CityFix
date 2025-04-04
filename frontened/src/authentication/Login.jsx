@@ -56,7 +56,13 @@ const Login = () => {
       if (data?.token && data?.user) {
         login(data.user, data.token);
         setFormData({ email: "", password: "" });
-        navigate("/dashboard");
+
+        // ✅ Admin Redirect Logic
+        if (data.user.email === "admin@admin.com") {
+          navigate("/admin");
+        } else {
+          navigate("/dashboard");
+        }
       } else {
         setApiError("Invalid response from server. Please try again.");
       }

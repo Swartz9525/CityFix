@@ -28,6 +28,11 @@ const serviceReportSchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
+    status: {
+      type: String,
+      enum: ["Pending", "Completed"],
+      default: "Pending",
+    },
   },
   { timestamps: true }
 );

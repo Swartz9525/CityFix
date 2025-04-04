@@ -1,0 +1,21 @@
+.table-responsive::-webkit-scrollbar {
+  height: 8px;
+}
+.table-responsive::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 5px;
+}
+.table-responsive::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+.shadow-3d {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  background: #fff;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.shadow-3d:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+}

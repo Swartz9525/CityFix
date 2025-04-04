@@ -71,6 +71,9 @@ router.post(
 
       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
 
+      // ✅ Admin user check
+      const redirectUrl = email.includes("@admin") ? "/admin" : "/dashboard";
+
       res.json({
         message: "Login successful",
         token,
@@ -79,6 +82,7 @@ router.post(
           name: user.name,
           email: user.email,
         },
+        redirect: redirectUrl, // ✅ Redirect URL based on role
       });
     } catch (error) {
       console.error("Login Error:", error);
@@ -86,6 +90,7 @@ router.post(
     }
   }
 );
+
 
 // ✅ Get Current User (Protected Route)
 router.get("/me", async (req, res) => {
