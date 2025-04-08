@@ -55,7 +55,7 @@ const Signup = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/register",
+        "https://cityfix-backend.vercel.app/api/auth/register",
         formData,
         {
           headers: { "Content-Type": "application/json" },

@@ -66,11 +66,14 @@ const Services = () => {
     };
 
     try {
-      const response = await fetch("http://localhost:5000/api/service/report", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(reportData),
-      });
+      const response = await fetch(
+        "https://cityfix-backend.vercel.app/api/service/report",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(reportData),
+        }
+      );
 
       const data = await response.json();
 
