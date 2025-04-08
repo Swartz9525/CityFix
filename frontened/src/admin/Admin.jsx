@@ -35,7 +35,7 @@ const AdminPanel = () => {
     try {
       setLoading(true);
       const res = await axios.get(
-        "https://city-fix-backend.vercel.app//api/reports"
+        `https://city-fix-backend.vercel.app/api/reports`
       );
       setReports(res.data);
     } catch (err) {
@@ -49,7 +49,7 @@ const AdminPanel = () => {
     const newStatus = currentStatus === "Pending" ? "Completed" : "Pending";
     try {
       await axios.put(
-        `https://city-fix-backend.vercel.app//api/reports/${id}/status`,
+        `https://city-fix-backend.vercel.app/api/reports/${id}/status`,
         {
           status: newStatus,
         }

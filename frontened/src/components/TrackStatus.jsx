@@ -15,7 +15,7 @@ const TrackStatus = () => {
 
     try {
       const response = await fetch(
-        `https://city-fix-backend.vercel.app//api/service/status/${referenceNumber}`
+        `https://city-fix-backend.vercel.app/api/service/status/${referenceNumber}`
       );
       const data = await response.json();
 
