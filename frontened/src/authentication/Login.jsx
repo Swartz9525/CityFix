@@ -49,7 +49,7 @@ const Login = () => {
 
     try {
       const { data } = await axios.post(
-        "https://cityfix-backend.vercel.app/api/auth/login",
+        "https://city-fix-backend.vercel.app//api/auth/login",
         formData
       );
 

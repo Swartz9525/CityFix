@@ -34,7 +34,9 @@ const AdminPanel = () => {
   const fetchReports = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("https://cityfix-backend.vercel.app/api/reports");
+      const res = await axios.get(
+        "https://city-fix-backend.vercel.app//api/reports"
+      );
       setReports(res.data);
     } catch (err) {
       setMessage("Failed to fetch reports");
@@ -46,9 +48,12 @@ const AdminPanel = () => {
   const handleStatusToggle = async (id, currentStatus) => {
     const newStatus = currentStatus === "Pending" ? "Completed" : "Pending";
     try {
-      await axios.put(`https://cityfix-backend.vercel.app/api/reports/${id}/status`, {
-        status: newStatus,
-      });
+      await axios.put(
+        `https://city-fix-backend.vercel.app//api/reports/${id}/status`,
+        {
+          status: newStatus,
+        }
+      );
       setReports((prev) =>
         prev.map((r) => (r._id === id ? { ...r, status: newStatus } : r))
       );

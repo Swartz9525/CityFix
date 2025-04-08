@@ -67,7 +67,7 @@ const Services = () => {
 
     try {
       const response = await fetch(
-        "https://cityfix-backend.vercel.app/api/service/report",
+        "https://city-fix-backend.vercel.app//api/service/report",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
