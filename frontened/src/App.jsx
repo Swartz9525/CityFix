@@ -14,7 +14,7 @@ import Services from "./components/Services";
 import ContactUs from "./components/Contact";
 import TrackStatus from "./components/TrackStatus";
 import AboutUs from "./components/AboutUs";
-import ProfilePage from "./components/ProfilePage";
+import Profile from "./components/ProfilePage";
 import AdminPanel from "./admin/Admin";
 import User from "./admin/Users";
 
@@ -85,7 +85,7 @@ const App = () => {
           />
           <Route
             path="/profile"
-            element={<PrivateRoute element={<ProfilePage />} />}
+            element={<PrivateRoute element={<Profile />} />}
           />
           <Route
             path="/admin"

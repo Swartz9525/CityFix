@@ -1,98 +1,67 @@
-import React from "react";
-import { Container, Row, Col, Card, Button } from "react-bootstrap";
-import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
-import { motion } from "framer-motion";
+import React, { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+import { Container, Card, Row, Col, Badge, Spinner } from "react-bootstrap";
+import "bootstrap-icons/font/bootstrap-icons.css";
+import "animate.css";
 
-const ProfilePage = () => {
+const Profile = () => {
+  const { user, loading } = useContext(AuthContext);
+
+  if (loading) {
+    return (
+      <Container className="mt-5 text-center">
+        <Spinner animation="border" variant="success" />
+        <p className="text-muted mt-2">Loading profile...</p>
+      </Container>
+    );
+  }
+
+  if (!user) {
+    return (
+      <Container className="mt-5 text-center">
+        <p className="text-danger">No user data found. Please login.</p>
+      </Container>
+    );
+  }
+
   return (
-    <Container fluid className="bg-light min-vh-100">
-      <Row className="justify-content-center align-items-center py-5">
-        <Col md={8} lg={6}>
-          <motion.div
-            initial={{ opacity: 0, y: -50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1 }}
-          >
-            <Card className="shadow-lg rounded-lg p-4">
-              {/* Profile Picture */}
-              <div className="text-center">
-                <motion.img
-                  src="https://via.placeholder.com/150"
-                  alt="Profile"
-                  className="rounded-circle mb-4"
-                  style={{
-                    width: "150px",
-                    height: "150px",
-                    border: "4px solid #80ed99",
-                    boxShadow: "0 4px 15px rgba(0, 0, 0, 0.2)",
-                  }}
-                  whileHover={{ scale: 1.1 }}
-                  transition={{ duration: 0.3 }}
-                />
-                {/* Name and Title */}
-                <motion.h3
-                  className="fw-bold text-dark"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 1 }}
-                >
-                  John Doe
-                </motion.h3>
-                <p className="text-muted">Web Developer</p>
-
-                {/* Bio */}
-                <motion.p
-                  className="mt-3 text-muted"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 1, delay: 0.5 }}
-                >
-                  Passionate about creating clean, responsive websites. I love
-                  building user-friendly interfaces and learning new
-                  technologies.
-                </motion.p>
-
-                {/* Social Links */}
-                <div className="d-flex justify-content-center mt-4">
-                  <a
-                    href="https://github.com/johndoe"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mx-3 text-dark"
-                  >
-                    <FaGithub size={30} />
-                  </a>
-                  <a
-                    href="https://www.linkedin.com/in/johndoe/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mx-3 text-dark"
-                  >
-                    <FaLinkedin size={30} />
-                  </a>
-                  <a
-                    href="https://twitter.com/johndoe"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mx-3 text-dark"
-                  >
-                    <FaTwitter size={30} />
-                  </a>
-                </div>
-
-                {/* Edit Profile Button */}
-                <div className="text-center mt-4">
-                  <Button variant="outline-primary" href="/edit-profile">
-                    Edit Profile
-                  </Button>
-                </div>
-              </div>
-            </Card>
-          </motion.div>
-        </Col>
-      </Row>
+    <Container className="mt-5 animate__animated animate__fadeIn">
+      <Card className="shadow-lg bg-dark text-light">
+        <Card.Header className="text-center fs-4 fw-semibold text-success">
+          <i className="bi bi-person-circle me-2"></i>User Profile
+        </Card.Header>
+        <Card.Body>
+          <Row className="mb-3">
+            <Col sm={4} className="fw-bold">
+              Name:
+            </Col>
+            <Col sm={8}>{user.name || "N/A"}</Col>
+          </Row>
+          <Row className="mb-3">
+            <Col sm={4} className="fw-bold">
+              Email:
+            </Col>
+            <Col sm={8}>
+              <Badge bg="info" text="dark">
+                {user.email || "N/A"}
+              </Badge>
+            </Col>
+          </Row>
+          <Row className="mb-3">
+            <Col sm={4} className="fw-bold">
+              Joined:
+            </Col>
+            <Col sm={8}>
+              {user.createdAt
+                ? new Date(user.createdAt).toLocaleString()
+                : "Unknown"}
+            </Col>
+          </Row>
+          {/* Add more custom fields here if your user object has them */}
+        </Card.Body>
+      </Card>
     </Container>
   );
 };
 
-export default ProfilePage;
+export default Profile;
