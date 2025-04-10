@@ -13,7 +13,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
-import { FaEye, FaEyeSlash } from "react-icons/fa"; // ✅ Import eye icons
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Login = () => {
   const { login } = useContext(AuthContext);
@@ -21,7 +21,7 @@ const Login = () => {
   const [errors, setErrors] = useState({});
   const [apiError, setApiError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false); // ✅ State for password visibility
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -53,20 +53,22 @@ const Login = () => {
         formData
       );
 
+      console.log("Login response:", data);
+
       if (data?.token && data?.user) {
         login(data.user, data.token);
         setFormData({ email: "", password: "" });
 
-        // ✅ Admin Redirect Logic
-        if (data.user.email === "admin@admin.com") {
-          navigate("/admin");
-        } else {
-          navigate("/dashboard");
-        }
+        const isAdmin = data.user.email.toLowerCase() === "admin@admin.com";
+        const destination = isAdmin ? "/admin" : "/dashboard";
+        console.log("Redirecting to:", destination);
+
+        navigate(destination);
       } else {
         setApiError("Invalid response from server. Please try again.");
       }
     } catch (error) {
+      console.error("Login error:", error);
       setApiError(
         error.response?.data?.message || "Login failed. Please try again."
       );
@@ -89,7 +91,7 @@ const Login = () => {
               {apiError && <Alert variant="danger">{apiError}</Alert>}
 
               <Form onSubmit={handleSubmit}>
-                {/* Email Field */}
+                {/* Email */}
                 <Form.Group controlId="email">
                   <Form.Label className="fw-semibold">Email</Form.Label>
                   <Form.Control
@@ -106,12 +108,12 @@ const Login = () => {
                   </Form.Control.Feedback>
                 </Form.Group>
 
-                {/* Password Field with Show/Hide Feature */}
+                {/* Password */}
                 <Form.Group controlId="password" className="mt-3">
                   <Form.Label className="fw-semibold">Password</Form.Label>
                   <InputGroup>
                     <Form.Control
-                      type={showPassword ? "text" : "password"} // ✅ Toggle visibility
+                      type={showPassword ? "text" : "password"}
                       name="password"
                       value={formData.password}
                       onChange={handleChange}
@@ -123,9 +125,9 @@ const Login = () => {
                       variant="outline-secondary"
                       className="border border-start-0 rounded-end-3"
                       onClick={() => setShowPassword(!showPassword)}
+                      type="button"
                     >
-                      {showPassword ? <FaEyeSlash /> : <FaEye />}{" "}
-                      {/* ✅ Eye Icon */}
+                      {showPassword ? <FaEyeSlash /> : <FaEye />}
                     </Button>
                     <Form.Control.Feedback type="invalid">
                       {errors.password}
@@ -133,7 +135,7 @@ const Login = () => {
                   </InputGroup>
                 </Form.Group>
 
-                {/* Submit Button */}
+                {/* Submit */}
                 <Button
                   type="submit"
                   variant="primary"

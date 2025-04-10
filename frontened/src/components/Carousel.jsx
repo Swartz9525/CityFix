@@ -19,7 +19,7 @@ const CarouselComponent = () => {
         <Carousel.Item>
           <img
             className="d-block w-100 carousel-image"
-            src="https://tse1.mm.bing.net/th?id=OIP.O_mIHJAMuNg3Up0RmiG1XAHaEo&pid=Api&P=0&h=220"
+            src="https://images.pexels.com/photos/3222575/pexels-photo-3222575.jpeg?auto=compress&cs=tinysrgb&w=600"
             alt="Water Pollution"
           />
           <Carousel.Caption>

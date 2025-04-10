@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Navbar,
   Nav,
@@ -8,7 +8,8 @@ import {
   Form,
   FormControl,
 } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "animate.css";
 
@@ -22,31 +23,29 @@ const pages = [
 const settings = [
   { name: "Profile", path: "/profile" },
   { name: "Account", path: "/account" },
-  { name: "TrackStatus", path: "/trackstatus" },
+  { name: "Track Status", path: "/trackstatus" },
 ];
 
 const MyNavbar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [showDropdown, setShowDropdown] = useState(false);
   const [animate, setAnimate] = useState(false);
-  const [user, setUser] = useState(null);
+
+  const { user, logout } = useContext(AuthContext);
+  const isAdmin =
+    user?.name?.toLowerCase() === "admin" || user?.role === "admin";
 
   useEffect(() => {
     setTimeout(() => setAnimate(true), 100);
-
-    // Fetch user details from localStorage (assuming login stores 'user')
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-    if (storedUser) {
-      setUser(storedUser);
-    }
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("user"); // Remove user data
-    localStorage.removeItem("token"); // Remove token (if stored)
-    setUser(null);
-    navigate("/"); // Redirect to home
+    logout();
+    navigate("/");
   };
+
+  if (!user) return null;
 
   return (
     <Navbar
@@ -55,74 +54,141 @@ const MyNavbar = () => {
       expand="lg"
       className={`px-3 animate__animated ${
         animate ? "animate__fadeInDown" : ""
-      }`}
-      style={{ position: "relative", zIndex: 1050 }}
+      } shadow`}
+      style={{ zIndex: 1050, position: "sticky", top: 0 }}
     >
-      <Container>
-        <Navbar.Brand className="text-success fw-bold">CityFix</Navbar.Brand>
+      <Container fluid>
+        <Navbar.Brand
+          as={Link}
+          to={isAdmin ? "/admin" : "/dashboard"}
+          className="text-success fw-bold fs-4"
+        >
+          {isAdmin ? "🛠️ Admin Panel" : "CityFix"}
+        </Navbar.Brand>
+
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            {pages.map((page) => (
-              <Nav.Link
-                as={Link}
-                to={page.path}
-                key={page.name}
-                className="text-light nav-item-hover"
-              >
-                {page.name}
-              </Nav.Link>
-            ))}
+            {isAdmin ? (
+              <>
+                <Nav.Link
+                  as={Link}
+                  to="/admin"
+                  className={
+                    location.pathname === "/admin"
+                      ? "nav-link-active"
+                      : "nav-link-custom"
+                  }
+                >
+                  Dashboard
+                </Nav.Link>
+                <Nav.Link
+                  as={Link}
+                  to="/admin/users"
+                  className={
+                    location.pathname === "/admin/users"
+                      ? "nav-link-active"
+                      : "nav-link-custom"
+                  }
+                >
+                  Users
+                </Nav.Link>
+              </>
+            ) : (
+              pages.map(({ name, path }) => (
+                <Nav.Link
+                  as={Link}
+                  to={path}
+                  key={name}
+                  className={
+                    location.pathname === path
+                      ? "nav-link-active"
+                      : "nav-link-custom"
+                  }
+                >
+                  {name}
+                </Nav.Link>
+              ))
+            )}
           </Nav>
 
-          <Form className="d-flex me-3">
-            <FormControl
-              type="search"
-              placeholder="Search"
-              className="me-2"
-              aria-label="Search"
-            />
-            <Button variant="outline-success">Search</Button>
-          </Form>
-
-          {user ? (
-            <NavDropdown
-              title={<span className="text-light">{user.name}</span>}
-              id="basic-nav-dropdown"
-              show={showDropdown}
-              onToggle={(isOpen) => setShowDropdown(isOpen)}
-              className="dropdown-animate"
-              menuVariant="dark"
-            >
-              {settings.map((setting) => (
-                <NavDropdown.Item
-                  key={setting.name}
-                  onClick={() => navigate(setting.path)}
-                >
-                  {setting.name}
-                </NavDropdown.Item>
-              ))}
-              <NavDropdown.Divider />
-              <NavDropdown.Item onClick={handleLogout} className="text-danger">
-                Logout
-              </NavDropdown.Item>
-            </NavDropdown>
-          ) : (
-            <Button variant="outline-light" onClick={() => navigate("/")}>
-              Login
-            </Button>
+          {!isAdmin && (
+            <Form className="d-flex me-3">
+              <FormControl
+                type="search"
+                placeholder="Search"
+                className="me-2"
+                aria-label="Search"
+              />
+              <Button variant="outline-success">Search</Button>
+            </Form>
           )}
+
+          <div className="d-flex align-items-center gap-3">
+            {isAdmin ? (
+              <>
+                <span className="text-light">Welcome Admin</span>
+                <Button
+                  variant="outline-danger"
+                  size="sm"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </Button>
+              </>
+            ) : (
+              <NavDropdown
+                title={<span className="text-light">{user.name}</span>}
+                id="basic-nav-dropdown"
+                show={showDropdown}
+                onToggle={(isOpen) => setShowDropdown(isOpen)}
+                className="dropdown-animate"
+                menuVariant="dark"
+              >
+                {settings.map(({ name, path }) => (
+                  <NavDropdown.Item key={name} onClick={() => navigate(path)}>
+                    {name}
+                  </NavDropdown.Item>
+                ))}
+                <NavDropdown.Divider />
+                <NavDropdown.Item
+                  onClick={handleLogout}
+                  className="text-danger"
+                >
+                  Logout
+                </NavDropdown.Item>
+              </NavDropdown>
+            )}
+          </div>
         </Navbar.Collapse>
       </Container>
 
       <style>{`
-        .nav-item-hover:hover {
-          color: #80ed99 !important;
+        .nav-link-custom {
+          color: white !important;
           transition: color 0.3s ease-in-out;
         }
+
+        .nav-link-custom:hover {
+          color: #80ed99 !important;
+        }
+
+        .nav-link-active {
+          color: #80ed99 !important;
+          font-weight: bold;
+        }
+
         .dropdown-menu {
           z-index: 1051 !important;
-          position: absolute !important;
+        }
+
+        .dropdown-animate .dropdown-menu {
+          animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
         }
       `}</style>
     </Navbar>

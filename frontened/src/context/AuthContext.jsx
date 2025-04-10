@@ -1,25 +1,30 @@
 import React, { createContext, useState, useEffect } from "react";
 
-// Create AuthContext
-export const AuthContext = createContext(null);
+// Create the context
+const AuthContext = createContext(null);
 
-// AuthProvider Component
-export const AuthProvider = ({ children }) => {
+// AuthProvider component
+function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // Load user and token from localStorage on component mount
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     const storedUser = localStorage.getItem("user");
 
     if (storedToken && storedUser) {
       setToken(storedToken);
-      setUser(JSON.parse(storedUser));
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (err) {
+        console.error("Failed to parse stored user:", err);
+      }
     }
+
+    setLoading(false);
   }, []);
 
-  // Login function
   const login = (userData, authToken) => {
     setUser(userData);
     setToken(authToken);
@@ -27,7 +32,6 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem("token", authToken);
   };
 
-  // Logout function
   const logout = () => {
     setUser(null);
     setToken(null);
@@ -36,8 +40,10 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout }}>
-      {children}
+    <AuthContext.Provider value={{ user, token, login, logout, loading }}>
+      {!loading && children}
     </AuthContext.Provider>
   );
-};
+}
+
+export { AuthContext, AuthProvider };

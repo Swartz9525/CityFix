@@ -56,6 +56,14 @@ const Services = () => {
     e.preventDefault();
     setLoading(true);
 
+    const token = localStorage.getItem("token"); // Make sure it's set on login
+
+    if (!token) {
+      alert("Please login to submit a report.");
+      setLoading(false);
+      return;
+    }
+
     const reportData = {
       referenceNumber: generateReferenceNumber(),
       title: problem,
@@ -70,7 +78,10 @@ const Services = () => {
         "https://city-fix-backend.vercel.app/api/service/report",
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // 🔐 Auth header
+          },
           body: JSON.stringify(reportData),
         }
       );

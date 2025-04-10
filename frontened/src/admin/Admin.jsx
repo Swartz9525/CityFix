@@ -315,6 +315,7 @@ const AdminPanel = () => {
                   <th>Description</th>
                   <th>Address</th>
                   <th>Contact</th>
+                  <th>Email</th> {/* <-- New column */}
                   <th>Date</th>
                   <th>Status</th>
                   <th>Toggle</th>
@@ -348,6 +349,7 @@ const AdminPanel = () => {
                       {report.address}
                     </td>
                     <td>{report.contact}</td>
+                    <td>{report.email}</td> {/* <-- New field */}
                     <td>{new Date(report.dateTime).toLocaleString()}</td>
                     <td>
                       <Badge
