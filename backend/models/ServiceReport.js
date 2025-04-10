@@ -28,6 +28,14 @@ const serviceReportSchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
+    email: {
+      type: String,
+      required: true,
+      match: [
+        /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
+        "Please enter a valid email address",
+      ],
+    },
     status: {
       type: String,
       enum: ["Pending", "Completed"],

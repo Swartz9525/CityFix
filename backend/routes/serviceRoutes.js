@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const ServiceReport = require("../models/ServiceReport");
+const authenticate = require("../middleware/authMiddleware"); // Import it
 
-// POST route to insert service report
-router.post("/report", async (req, res) => {
+// POST route with authentication
+router.post("/report", authenticate, async (req, res) => {
   try {
     const { title, description, address, contact, dateTime } = req.body;
 
@@ -11,12 +12,15 @@ router.post("/report", async (req, res) => {
       return res.status(400).json({ message: "All fields are required." });
     }
 
+    const email = req.user.email;
+
     const newReport = new ServiceReport({
       referenceNumber: `REF-${Date.now().toString().slice(-6)}`,
       title,
       description,
       address,
       contact,
+      email,
       dateTime,
     });
 

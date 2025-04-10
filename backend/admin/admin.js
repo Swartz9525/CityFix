@@ -1,13 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const ServiceReport = require("../models/ServiceReport");
+const User = require("../models/User");
 
 // GET all service reports
 router.get("/", async (req, res) => {
-  console.log("GET /api/service-reports hit");
   try {
     const reports = await ServiceReport.find().sort({ createdAt: -1 });
-    console.log("Reports fetched:", reports.length);
     res.json(reports);
   } catch (err) {
     console.error("Error fetching reports:", err.message);
@@ -57,6 +56,15 @@ router.post("/", async (req, res) => {
   } catch (err) {
     console.error("Error creating report:", err.message);
     res.status(500).json({ message: "Failed to create report", error: err.message });
+  }
+});
+
+router.get("/users", async (req, res) => {
+  try {
+    const users = await User.find().select("name email password createdAt");
+    res.json(users);
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching users", error: err.message });
   }
 });
 
